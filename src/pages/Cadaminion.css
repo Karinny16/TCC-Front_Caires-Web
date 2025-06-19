@@ -1,0 +1,77 @@
+/* INPUT */
+
+
+.input-container {
+display: flex; 
+flex-direction: column; 
+align-items: flex-start; 
+gap: 2px; 
+width: 100%; 
+}
+
+.input-fields {
+width: 80%;
+padding: 10px; 
+border-radius: 5px; 
+font-size: 16px; 
+border: 2px solid #ccc; 
+background-color: #f9f9f9; 
+}
+
+.putbut{
+flex: 1;
+display: flex;
+flex-direction: column;
+justify-content: space-evenly;
+gap: 2px;
+width: 80%;
+align-items: flex-start;
+padding: 80px;
+}
+
+.direitas-side {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  border-radius: 0 16px 16px 0;
+  flex-direction: column;
+  justify-content:center;
+  align-items:center;
+  padding: 120px;
+  padding-bottom: 20px;
+}
+
+
+.others-side {
+  display: flex; 
+   flex-direction: column; 
+   flex: 0.6; 
+   background-color: #fff; 
+   border-radius: 16px 0 0 10px; 
+   padding: 30px; 
+   justify-content: space-between;
+   gap: 40vh;
+ }
+
+ .div1{
+  height: 2em;
+  padding: 80px;
+}
+
+.contents-1 {
+  flex: 0.55;
+  gap:40px;
+  justify-content:space-evenly;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contents-2 {
+  flex: 1;
+  gap:90px;
+  justify-content:space-evenly;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

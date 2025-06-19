@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 65vw;
+  height: 75vh;
+  border-radius: 20px;
+  box-shadow: 40px 40px 10px #00000040;
+}
+.content2 {
+  flex: 1;
+  gap:10px;
+  justify-content:space-evenly;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  flex: 0.4;
+  background-color: #809AD1;
+  border-radius: 16px 0 0 10px;
+  padding: 30px;
+}
+
+.right-side {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  border-radius: 0 16px 16px 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items:center;
+  padding: 30px;
+  padding-bottom: 40px;
+
+
+}
+
+.funcionario,
+.condominio {
+  width: 100%;
+  /* padding: 20px; */
+  border-radius: 40px;
+  border-color: #f5f5f5;
+  font-size: 1vw;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  justify-content:flex-start;
+}
+
+.funio {
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 100px; 
+  width: 79%; 
+  padding: 30px; 
+  border-radius: 45px; 
+  font-size: 1.4vw;
+  background-color: #d6d6d6; 
+  border: 2px solid #f5f5f5; 
+  font-family: "Poppins", sans-serif;
+  font-weight: 800; 
+  color: #000; 
+  cursor: pointer; 
+  position: relative; 
+}
+
+.icon-func, .icon-apt {
+  margin-left: 10px; 
+}
+
+.fc {
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-evenly; 
+  gap: 40px; 
+  width: 100%; 
+  align-items: center;
+  padding: 80px;
+}
+
+
+
+
+
+.diva {
+  width: 100%;
+  height: auto;
+}
+
+.text-cad{
+  font-size: 1.2vw;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+.text-cad1{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  flex: 0.5;
+  color: #ffffff;
+  font-size: 1.2vw;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.icon-func {
+  font-size: 20px;
+  position:relative;
+  left: 1.5vw;
+}
+
+.icon-apt {
+  font-size: 20px;
+  position:relative;
+  left: 1.5vw;
+}

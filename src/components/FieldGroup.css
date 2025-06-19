@@ -1,0 +1,26 @@
+.fg-container {
+  display: flex;
+  gap: var(--fg-col-gap);
+  max-height: var(--fg-max-height);
+  overflow-y: auto;       /* só aparece quando max-height < conteúdo */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.fg-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fg-row-gap);
+}
+
+.fg-label {
+  margin: 0;
+  font-weight: bold;
+}
+
+.fg-field {
+  width: var(--fg-field-width);
+  height: 3.5rem;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
