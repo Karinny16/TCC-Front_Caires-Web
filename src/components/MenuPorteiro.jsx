@@ -16,7 +16,7 @@ function MenuPorteiro() {
   };
 
   const abas = [
-    { nome: "Prestador", rota: "/servidorP" },
+    { nome: "Consulta", rota: "/servidorP" },
     { nome: "Visitantes", rota: "/visitantesP" },
     { nome: "Pedidos", rota: "/pedidosP" },
   ];

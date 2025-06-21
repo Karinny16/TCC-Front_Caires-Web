@@ -9,10 +9,11 @@ function ButtonP() {
     );
 
     const abas = [
+        { nome: "Consulta", rota: "/servidorP" },
         { nome: "visitantes", rota: "/visitantesP" },
-        { nome: "prestadores", rota: "/servidorP" },
         { nome: "pedidos", rota: "/pedidosP" }
     ];
+
 
     useEffect(() => {
         localStorage.setItem("abaSelecionada", abaSelecionada);

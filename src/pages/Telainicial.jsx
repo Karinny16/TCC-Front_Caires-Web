@@ -10,12 +10,10 @@ import { FaUnlock } from "react-icons/fa6";
 import { IoIosMenu } from "react-icons/io";
 import ButtonAz from "../components/ButtonAz";
 import { useState, useEffect } from "react";
-import { useHistorico } from "../../src/context/HistoricoContext";
 import { Button } from "@mui/material";
 
 function Telainicial() {
     const [moradores, setMoradores] = useState([]);
-    const { historicoConsultas } = useHistorico();
     useEffect(() => {
       fetch('http://localhost:3333/morador', {
         method: 'GET',
@@ -85,7 +83,7 @@ function Telainicial() {
                   <FaUserAltSlash size={30} color="black" />
                 </div>
                 <div className="red-sub7" style={{cursor: 'pointer'}} onClick={() => window.location.href = '/acessos-liberados'}>
-                <p>{`Acessos Liberados: ${historicoConsultas.length}`}</p>
+                <p>{`Acessos Liberados:`}</p>
                   <FaUnlock size={30} color="black" />
                 </div>
               </div>

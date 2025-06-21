@@ -122,14 +122,10 @@ function CadasPSer() {
             )}
           </div>
 
-
-
-
-
           <div className="contente-3"></div>
           <div className="contente-2">
             <div className="button-div">
-              <Button text="VOLTAR" onClick={handleClick} />
+              <Button text="VOLTA" onClick={handleClick} />
               <Button type="submit" text="ENVIAR" />
             </div>
           </div>

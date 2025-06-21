@@ -7,8 +7,8 @@
   height: 75vh;
   border-radius: 20px;
   box-shadow: 40px 40px 10px #00000040;
+  overflow: visible; /* Adicione esta linha */
 }
-
 .oest-side {
   display: flex;
   flex-direction: column;
@@ -84,13 +84,54 @@
 
 /* Estilo para o resultado da busca */
 .resultado-morador {
-  margin-top: 20px;
-  background: #f5f5f5;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px #0001;
-  min-width: 250px;
+  margin-top: 30px;
+  background: linear-gradient(135deg, #e0e7ff 60%, #b6c6f5 100%);
+  padding: 28px 32px;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0002;
+  min-width: 320px;
   color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  animation: fadeIn 0.7s;
+}
+
+.resultado-morador .badge {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  background: #4caf50;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #0001;
+  letter-spacing: 1px;
+}
+
+.resultado-morador .badge.negado {
+  background: #e53935;
+  color: #fff;
+}
+
+.resultado-morador .info-row {
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.resultado-morador .info-label {
+  font-weight: 600;
+  color: #3b3b3b;
+  margin-right: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
 }
 
 .rectangle1-cad {
@@ -120,6 +161,9 @@
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 margin-top: 50px;
+  position: relative;
+  z-index: 10;
+
 }
 
 .div-button21 {
@@ -129,6 +173,8 @@ margin-top: 50px;
 }
 
 .custom-button-cad12 {
+    position: relative;
+  z-index: 10;
   background-color: transparent;
   border: 2px solid #000;
   border-radius: 30px;

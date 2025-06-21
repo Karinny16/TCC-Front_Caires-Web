@@ -20,6 +20,7 @@ const SelectV = ({ value, onChange }) => {
         </option>
         <option value="Visitante comum">Visitante comum</option>
         <option value="Visitante permanente">Visitante permanente</option>
+        <option value="Prestador de serviço">Prestador de Serviço</option>
       </select>
       <p>Você selecionou: {value}</p>
     </div>

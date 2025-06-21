@@ -25,7 +25,7 @@ function Cadastro() {
       if (respJSON.tipo === "Sindico") {
         navigate("/Telainicial");
       } else if (respJSON.tipo === "Porteiro") {
-        navigate("/Cadanario");
+        navigate("/servidorP");
       } else {
         navigate("/Telainicial");
       }
