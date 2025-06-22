@@ -43,6 +43,9 @@ export function formatTelefone(value) {
   const secondPart = digits.slice(7);
   return `(${ddd})${firstPart ? ' ' + firstPart : ''}${secondPart ? '-' + secondPart : ''}`;
 }
+export function isPlacaValida(placa) {
+  return /^[A-Z]{3}[0-9][0-9A-Z][0-9]{2}$/.test(placa);
+}
 
 export const FormCardSchema = z.object({
   nome: z.string().min(2, "Nome é obrigatório e deve ter mais de duas letras").optional(),
@@ -104,5 +107,33 @@ empresa: z.string().min(4, "Informe uma empresa").optional(),
 
 status_entrega: z.string().min(8, "Informe uma empresa").optional(),
 
+ placa: z
+    .string()
+    .refine((value) => isPlacaValida(value), {
+      message:
+        "Placa inválida. Use o padrão Mercosul (3 letras maiúsculas, 1 dígito, 1 alfanumérico, 2 dígitos)",
+    })
+    .optional(),
 
+   cor: z
+    .string()
+    .min(3, "Informe a cor do veículo")
+    .optional(),
+
+  tipo: z
+    .string()
+    .min(3, "Informe o tipo de veículo")
+    .optional(),
+
+  vaga: z
+    .string()
+    .refine((vaga) => /^\d+$/.test(vaga), {
+      message: "Vaga inválida. Use apenas números",
+    })
+    .optional(),
+
+  modelo: z
+    .string()
+    .min(1, "Informe o modelo do veículo")
+    .optional()
 });

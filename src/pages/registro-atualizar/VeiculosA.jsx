@@ -10,7 +10,7 @@ function VeiculosA() {
           <div>
             <MeuMenu />
           </div>
-          <Title>Adicionar um novo Veículo:</Title>
+          <Title>Atualizar Veículo:</Title>
           <div class="phot-circle"></div>
         </div>
       </div>

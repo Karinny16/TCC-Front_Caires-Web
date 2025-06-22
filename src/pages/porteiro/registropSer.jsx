@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../impressao.css";
+import "../porteiro/Consulta.css";
 import cairesd from "../../assets/cairesd.png";
 import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,7 @@ function ServidoresRP() {
   return (
     <div className="container">
       {/* Botões no topo */}
-      <div className="container-botoes">
+      <div className="containe-botoes">
         <ButtonP />
     
       </div>
@@ -60,7 +60,7 @@ function ServidoresRP() {
               <IoIosSearch size={20} color="black" className="input-icon" />
               <input
                 type="text"
-                className="input-fiels"
+                className="procurar-campo"
                 placeholder="procurar visitantes por CPF"
                 value={cpf}
                 onChange={e => setCpf(e.target.value)}

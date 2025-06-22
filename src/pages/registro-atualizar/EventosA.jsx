@@ -19,7 +19,7 @@ function EventosA() {
         <div>
       <MeuMenu /> {/* Aqui o menu aparece na tela */}
     </div>
-        <Title>Adicionar um novo Evento:</Title>
+        <Title>Atualizar Evento:</Title>
         {/* <div class="photo-circle">
         </div>
 

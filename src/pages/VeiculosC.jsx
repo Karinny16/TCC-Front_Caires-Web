@@ -3,90 +3,80 @@ import Title from "../components/Title";
 import Button from "../components/Button";
 import MeuMenu from "../components/MeuMenu";
 import { FaCar } from "react-icons/fa";
-
-import { useState } from "react";
+import { FormCardSchema } from "../components/FormCad";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 function VeiculosC() {
-  const [modelo, setModelo] = useState("");
-  const [placa, setPlaca] = useState("");
-  const [cor, setCor] = useState("");
-  const [tipo_veiculo, setTipo_Veiculo] = useState("");
-  const [fkIdMorador, setFkIdMorador] = useState("");
-
   const navigate = useNavigate();
 
-  function isPlacaValida(placa) {
-    return /^[A-Z]{3}[0-9][0-9A-Z][0-9]{2}$/.test(placa);
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm({
+    mode: "all",
+    resolver: zodResolver(FormCardSchema),
+    defaultValues: {
+      modelo: "",
+      placa: "",
+      tipo: "",
+      cor: "",
+      id_unidade: "",
+    },
+  });
 
-  function handleCadastrar() {
-    if (!modelo || !placa || !cor || !tipo_veiculo || !fkIdMorador) {
-      alert("Preencha todos os campos.");
-      return;
-    }
-
-    if (!isPlacaValida(placa)) {
-      alert("Placa inválida! Use o padrão Mercosul (ex: ABC1D23).");
-      return;
-    }
-
-    const veiculo = {
-      modelo,
-      placa,
-      cor,
-      tipo_veiculo,
-      fk_id_morador: fkIdMorador,
-    };
-
+  const onSubmit = (data) => {
+        console.log("Dados do formulário:", data);
     fetch("http://localhost:3333/veiculo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(veiculo),
+      body: JSON.stringify(data),          
     })
       .then((resp) => {
         if (resp.status === 201) {
           alert("Veículo cadastrado com sucesso!");
           navigate("/VeiculosR");
         } else {
-          return resp.json().then((data) => {
-            throw new Error(data.message || "Erro ao cadastrar.");
+          return resp.json().then((body) => {
+            throw new Error(body.message || "Erro ao cadastrar.");
           });
         }
       })
-      .catch((error) => {
-        console.error("Erro:", error.message);
-        alert(error.message || "Erro ao cadastrar veículo.");
+      .catch((err) => {
+        console.error("Erro:", err.message);
+        alert(err.message || "Erro ao cadastrar veículo.");
       });
-  }
+  };
 
   return (
     <div className="container">
-      <div className="othe-side">
-        <div className="conten-1">
-          <div>
-            <MeuMenu />
-          </div>
+      <div className="other-side">
+        <div className="contente-1">
+          <MeuMenu />
           <Title>Adicionar um novo Veículo:</Title>
-          <div className="phot-circle">
-              
-                <FaCar  size={170} color="#555" />
-            </div>
+          <div className="photo-circle">
+            <FaCar size={170} color="#555" />
+          </div>
         </div>
       </div>
 
       <div className="direita-side">
-        <div className="tamanho"></div>
-        <div className="putbu">
+        <form className="putbu" onSubmit={handleSubmit(onSubmit)}>
           <div className="input-container">
             <Title>Modelo:</Title>
             <input
               type="text"
               className="input-fields"
-              placeholder="Digite o modelo"
-              value={modelo}
-              onChange={(e) => setModelo(e.target.value)}
+              {...register("modelo")}
+              placeholder="Informe o modelo do veículo"
             />
+            {errors.modelo && (
+              <span style={{ color: "red" }}>{errors.modelo.message}</span>
+            )}
           </div>
 
           <div className="input-container">
@@ -94,20 +84,31 @@ function VeiculosC() {
             <input
               type="text"
               className="input-fields"
-              placeholder="Digite a placa"
-              value={placa}
-              onChange={(e) => setPlaca(e.target.value)}
+              value={watch("placa")}
+              placeholder="Digite a placa (ABC1D23)"
+              onChange={(e) => {
+                // mantém em maiúsculo para combinar com o regex
+                setValue("placa", e.target.value.toUpperCase(), {
+                  shouldValidate: true,
+                });
+              }}
             />
+            {errors.placa && (
+              <span style={{ color: "red" }}>{errors.placa.message}</span>
+            )}
           </div>
+
           <div className="input-container">
             <Title>Cor:</Title>
             <input
               type="text"
               className="input-fields"
-              placeholder="Digite a cor"
-              value={cor}
-              onChange={(e) => setCor(e.target.value)}
+              {...register("cor")}
+              placeholder="Digite a cor do veículo"
             />
+            {errors.cor && (
+              <span style={{ color: "red" }}>{errors.cor.message}</span>
+            )}
           </div>
 
           <div className="input-container">
@@ -115,42 +116,40 @@ function VeiculosC() {
             <input
               type="text"
               className="input-fields"
-              placeholder="Digite o tipo_veiculo"
-              value={tipo_veiculo}
-              onChange={(e) => setTipo_Veiculo(e.target.value)}
+              {...register("tipo")}
+              placeholder="Digite o tipo do veículo"
             />
+            {errors.tipo && (
+              <span style={{ color: "red" }}>{errors.tipo.message}</span>
+            )}
           </div>
+
           <div className="input-container">
-            <Title>ID do Morador:</Title>
+            <Title>Id Unidade:</Title>
             <input
               type="text"
               className="input-fields"
-              placeholder="Digite a ID do Morador"
-              value={fkIdMorador}
-              onChange={(e) => setFkIdMorador(e.target.value)}
+              {...register("id_unidade")}
+              placeholder="Digite o id da unidade"
             />
+            {errors.id_unidade && (
+              <span style={{ color: "red" }}>
+                {errors.id_unidade.message}
+              </span>
+            )}
           </div>
-
- <div className="contente-3"></div>
+          
+          <div className="contente-3"></div>
           <div className="contente-2">
-            <div className="button-div">         
-                 <Button
-              text="VOLTAR"
-              onClick={() => navigate("/VeiculosR")}
-            />
-
-            <Button
-              text="CADASTRAR"
-              onClick={handleCadastrar}
-            />
-          </div>
-        </div>
+            <div className="button-div">
+              <Button text="VOLTAR" onClick={() => navigate("/VeiculosR")} />
+              <Button type="submit" text="CADASTRAR" />
             </div>
-
+          </div>
+        </form>
       </div>
     </div>
   );
 }
-
 
 export default VeiculosC;

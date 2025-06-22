@@ -39,7 +39,7 @@ function RegistroP() {
                 <IoIosSearch size={20} color="black" className="input-icon" />
                 <input
                   type="text"
-                  className="input-fiels"
+                  className="input-campo"
                   placeholder="procurar"
                 />
               </div>

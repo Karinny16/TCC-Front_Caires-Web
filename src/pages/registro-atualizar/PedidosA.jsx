@@ -15,7 +15,7 @@ function PedidosA () {
              <div>
       <MeuMenu /> 
     </div>
-            <Title>Adicionar uma nova encomenda:</Title>
+            <Title>Atualizar Encomenda:</Title>
     
             </div> 
     

@@ -19,7 +19,7 @@ function PrestadoresA() {
           <div>
       <MeuMenu /> 
     </div>
-        <Title>Adicionar um novo Prestador de serviço:</Title>
+        <Title> Atualizar Prestador de serviço:</Title>
         <div class="photo-circle">
         </div>
 

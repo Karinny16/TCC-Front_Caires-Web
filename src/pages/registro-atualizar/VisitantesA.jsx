@@ -20,7 +20,7 @@ function VisitantesA() {
           <div>
             <MeuMenu /> {/* Aqui o menu aparece na tela */}
           </div>
-          <Title>Adicionar um novo Visitante:</Title>
+          <Title>Atualizar Visitante:</Title>
           <div class="photo-circle"></div>
         </div>
       </div>
