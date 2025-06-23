@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-const FuncionarioCard = ({id_funcionario, nome, nivel_acesso,telefone, rota})=>{
+const FuncionarioCard = ({id_funcionario, nome, nivel_acesso,cpf, rota})=>{
     const navigate = useNavigate();
     return(
         <div className="dive-label" style={{ position: "relative" }}>
@@ -23,7 +23,7 @@ const FuncionarioCard = ({id_funcionario, nome, nivel_acesso,telefone, rota})=>{
           </div>
           <div className="div2-label">
             <div className="text-container">
-              <text className="text-fields">{telefone}</text>
+              <text className="text-fields">{cpf}</text>
             </div>
           </div>
         </div>

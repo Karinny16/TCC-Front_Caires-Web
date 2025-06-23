@@ -1,50 +1,33 @@
 import React from "react";
 import "./Dropdown.css";
 
+const generos = [
+  { id: 2, label: "Feminino" },
+  { id: 1, label: "Masculino" },
+  { id: 3, label: "Outro" },
+];
+
 const DropdownWithRadios = ({ value, onChange }) => {
   const handleChange = (e) => {
-    onChange(e.target.value);
+    onChange(String(e.target.value)); // sempre string
   };
-
   return (
     <div className="dropdown">
       <ul className="dropdown-options">
-        <li>
-          <label>
-            <input
-              type="radio"
-              name="dropdown"
-              value="Feminino"
-              checked={value === "Feminino"}
-              onChange={handleChange}
-            />
-            Feminino
-          </label>
-        </li>
-        <li>
-          <label>
-            <input
-              type="radio"
-              name="dropdown"
-              value="Masculino"
-              checked={value === "Masculino"}
-              onChange={handleChange}
-            />
-            Masculino
-          </label>
-        </li>
-        <li>
-          <label>
-            <input
-              type="radio"
-              name="dropdown"
-              value="Outro"
-              checked={value === "Outro"}
-              onChange={handleChange}
-            />
-            Outro
-          </label>
-        </li>
+        {generos.map((g) => (
+          <li key={g.id}>
+            <label>
+              <input
+                type="radio"
+                name="dropdown"
+                value={String(g.id)}
+                checked={String(value) === String(g.id)}
+                onChange={handleChange}
+              />
+              {g.label}
+            </label>
+          </li>
+        ))}
       </ul>
     </div>
   );

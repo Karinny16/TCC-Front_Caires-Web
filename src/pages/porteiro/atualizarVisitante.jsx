@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Title from "../../components/Title";
 import Button from "../../components/Button";
 import DropdownWithRadios from "../../components/Dropdown";
@@ -6,7 +6,7 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import MenuPorteiro from "../../components/MenuPorteiro";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 
 // Schema de validação para visitante
@@ -16,7 +16,16 @@ const FormCardSchema = z.object({
   rg: z.string().optional(),
   nivel_acesso: z.string().nonempty("Selecione o nível de acesso"),
   genero: z.string().nonempty("Selecione o gênero"),
-  id_unidade: z.string().nonempty("Informe a unidade"), // novo campo obrigatório
+  permissao: z.enum(["negado", "permitido"], { message: "Selecione a permissão" }),
+  motivo: z.string().max(50, "Máximo 50 caracteres").optional(),
+}).refine((data) => {
+  if (data.permissao === "negado") {
+    return !!data.motivo && data.motivo.trim().length > 0;
+  }
+  return true;
+}, {
+  message: "Informe o motivo da negação",
+  path: ["motivo"],
 });
 
 const NIVEL_ACESSO_OPTIONS = [
@@ -25,14 +34,17 @@ const NIVEL_ACESSO_OPTIONS = [
   "Prestador de Serviço"
 ];
 
-function CadasPvisi({ imageUrl }) {
+function AtualizarVisitante({ imageUrl }) {
   const navigate = useNavigate();
+  const { id_visitante } = useParams();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm({
     mode: "all",
     resolver: zodResolver(FormCardSchema),
@@ -42,58 +54,60 @@ function CadasPvisi({ imageUrl }) {
       rg: "",
       nivel_acesso: "",
       genero: "",
-      id_unidade: "", // novo campo
+      permissao: "",
+      motivo: "",
     },
   });
+
+  // Buscar dados do visitante ao montar
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const resp = await fetch(`http://localhost:3333/visitantes/${id_visitante}`);
+        if (resp.ok) {
+          const data = await resp.json();
+          const visitante = Array.isArray(data.message) ? data.message[0] : data.message;
+          setValue("nome", visitante.nome);
+          setValue("cpf", visitante.cpf);
+          setValue("rg", visitante.rg || "");
+          setValue("nivel_acesso", visitante.nivel_acesso);
+          setValue("genero", visitante.id_genero?.toString() || "");
+          setValue("permissao", visitante.permissao || "");
+          setValue("motivo", visitante.motivo || "");
+        }
+      } catch (e) {
+        alert("Erro ao buscar dados do visitante.");
+      }
+    }
+    fetchData();
+  }, [id_visitante, setValue]);
 
   const handleClick = () => {
     navigate("/visitantesP");
   };
 
   const onSubmit = async (data) => {
-    const visitanteData = {
-      nome: data.nome,
-      cpf: data.cpf,
-      rg: data.rg,
-      nivel_acesso: data.nivel_acesso,
-      id_genero: Number(data.genero),
-    };
-    console.log("Enviando para backend:", visitanteData);
     try {
-      // 1. Cadastra visitante
-      const resp = await fetch("http://localhost:3333/visitantes", {
-        method: "POST",
+      const visitanteData = {
+        nome: data.nome,
+        cpf: data.cpf,
+        rg: data.rg,
+        nivel_acesso: data.nivel_acesso,
+        id_genero: Number(data.genero),
+        permissao: data.permissao,
+        motivo: data.permissao === "negado" ? data.motivo : "Morador permitido",
+      };
+      const resp = await fetch(`http://localhost:3333/visitantes/${id_visitante}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(visitanteData),
       });
+
       if (resp.ok) {
-        const visitanteCriado = await resp.json();
-        console.log("Visitante criado:", visitanteCriado);
-
-        const id_visitante = visitanteCriado.id_visitante;
-        if (!id_visitante) {
-        alert("Erro: id_visitante não retornado pelo backend.");
-        return;
-      }
-        // 2. Faz associação com unidade
-        console.log("Associação:", { id_visitante, id_unidade: data.id_unidade });
-        const assocResp = await fetch("http://localhost:3333/moradorVisitanteAssociacao", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id_visitante,
-            id_unidade: data.id_unidade,
-          }),
-        });
-
-        if (assocResp.ok) {
-          alert("Visitante cadastrado e associado à unidade com sucesso!");
-          navigate("/visitantesP");
-        } else {
-          alert("Visitante cadastrado, mas erro ao associar à unidade.");
-        }
+        alert("Visitante atualizado com sucesso!");
+        navigate("/visitantesP");
       } else {
-        alert("Erro ao cadastrar visitante.");
+        alert("Erro ao atualizar visitante.");
       }
     } catch (e) {
       alert("Erro de conexão.");
@@ -105,7 +119,7 @@ function CadasPvisi({ imageUrl }) {
       <div className="other-side">
         <div className="contente-1">
           <MenuPorteiro />
-          <Title>Adicionar um novo Visitante:</Title>
+          <Title>Atualizar Visitante:</Title>
           <div className="photo-circle">
             {imageUrl ? (
               <img src={imageUrl} alt="User" />
@@ -186,21 +200,40 @@ function CadasPvisi({ imageUrl }) {
           </div>
 
           <div className="input-container">
-            <Title>Unidade (associação):</Title>
-            <input
-              type="text"
+            <Title>Permissão:</Title>
+            <select
               className="input-fields"
-              {...register("id_unidade")}
-              placeholder="Digite o id da unidade para associação"
-            />
-            {errors.id_unidade && (
-              <span style={{ color: "red" }}>{errors.id_unidade.message}</span>
+              {...register("permissao")}
+              defaultValue=""
+            >
+              <option value="" disabled>Selecione a permissão</option>
+              <option value="permitido">Permitido</option>
+              <option value="negado">Negado</option>
+            </select>
+            {errors.permissao && (
+              <span style={{ color: "red" }}>{errors.permissao.message}</span>
             )}
           </div>
 
+          {watch("permissao") === "negado" && (
+            <div className="input-container">
+              <Title>Motivo da Negação:</Title>
+              <input
+                type="text"
+                className="input-fields"
+                {...register("motivo")}
+                placeholder="Digite o motivo da negação"
+                maxLength={50}
+              />
+              {errors.motivo && (
+                <span style={{ color: "red" }}>{errors.motivo.message}</span>
+              )}
+            </div>
+          )}
+
           <div className="button-div">
             <Button text="VOLTAR" type="button" onClick={handleClick} />
-            <Button type="submit" text="ENVIAR" />
+            <Button type="submit" text="ATUALIZAR" />
           </div>
         </form>
       </div>
@@ -208,4 +241,4 @@ function CadasPvisi({ imageUrl }) {
   );
 }
 
-export default CadasPvisi;
+export default AtualizarVisitante;

@@ -5,78 +5,132 @@ import ButtonR from "../../components/ButtonR";
 import ButtonP from "../../components/buttonP";
 import MeuMenu from "../../components/MeuMenu";
 import { IoAddCircleOutline } from "react-icons/io5";
-
+import { IoIosPower } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import CardGeral from "../CardGeral";
 function RegistroP() {
   const navigate = useNavigate();
+  const [visitantes, setVisitantes] = useState([]);
+  const [associacoes, setAssociacoes] = useState([]); // renomeie para ficar claro
+
+  useEffect(() => {
+    fetch("http://localhost:3333/visitantes", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        const lista = Array.isArray(data.message) ? data.message : [];
+        setVisitantes(lista);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar visitantes:", err);
+        setVisitantes([]);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3333/moradorVisitanteAssociacao", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        const lista = Array.isArray(data.message) ? data.message : [];
+        setAssociacoes(lista);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar associações:", err);
+        setAssociacoes([]);
+      });
+  }, []);
 
   return (
-    <div className="container-principal">
-      <div className="container-botoes">
-        <ButtonP />
-      </div>
+    <>
+      <button
+        className="logout-top-left"
+        onClick={() => navigate("/")}
+        title="Sair"
+      >
+        <IoIosPower size={48} color="white" />
+      </button>
+      <div className="container-principal">
+        {/* Container dos botões - Não interfere no alinhamento */}
+        <div className="container-botoes">
+          <ButtonP />
+        </div>
 
-      <div className="continent-4">
-        <div className="continente scroll">
-          <div className="pesquisa-side">
-            <div className="continente-1">
-              <div>
+        {/* Container principal do conteúdo */}
+        <div className="continent-4">
+          <div className="continente scroll">
+            {/* Barra de pesquisa */}
+            <div className="pesquisa-side">
+              <div className="continente-1">
+                <MeuMenu />
+                <img src={cairesa} alt="Logo" className="img-cadA" />
+                <div className="icon-contain">
+                  <IoAddCircleOutline
+                    size={50}
+                    color="black"
+                    className="more-icon"
+                    onClick={() => navigate("/visitantesCP")}
+                    style={{ cursor: "pointer" }}
+                  />
+                </div>
               </div>
-              <img src={cairesa} alt="Logo" className="img-cadA" />
-              <div className="icon-contain">
-                <IoAddCircleOutline
-                  size={50}
-                  color="black"
-                  className="more-icon"
-                  onClick={() => navigate("/visitantesCP")}
-                  style={{ cursor: "pointer" }}
-                />
+              <div className="procura-2">
+                <div className="input-contain">
+                  <IoIosSearch size={20} color="black" className="input-icon" />
+                  <input
+                    type="text"
+                    className="input-fiels"
+                    placeholder="procurar"
+                  />
+                </div>
               </div>
             </div>
-            <div className="procura-2">
-              <div className="input-contain">
-                <IoIosSearch size={20} color="black" className="input-icon" />
-                <input
-                  type="text"
-                  className="input-campo"
-                  placeholder="procurar"
-                />
-              </div>
-            </div>
-          </div>
 
-          <div className="label-side">
-            <div className="dive-label">
+            {/* Lista de Informações */}
+            <div className="label-side">
               <div className="div-label">
-                <p>Nome:</p>
-                {[...Array(8)].map((_, index) => (
-                  <div key={index} className="text-container">
-                    <text className="text-fields"></text>
-                  </div>
-                ))}
+                <p>Nome</p>
+                <p>CPF</p>
+                <p>Vinculo</p>
               </div>
-              <div className="div1-label">
-                <p>Data de Entrega:</p>
-                {[...Array(8)].map((_, index) => (
-                  <div key={index} className="text-container">
-                    <text className="text-fields"></text>
-                  </div>
-                ))}
-              </div>
-              <div className="div2-label">
-                <p>Status de Entrega:</p>
-                {[...Array(8)].map((_, index) => (
-                  <div key={index} className="text-container">
-                    <text className="text-fields"></text>
-                  </div>
-                ))}
-              </div>
+              {visitantes.length > 0 ? (
+                visitantes.map((visitante, idx) => {
+                  // Pegue todas as unidades associadas a esse visitante
+                  const unidadesDoVisitante = associacoes
+                    .filter((assoc) => assoc.id_visitante === visitante.id_visitante)
+                    .map((assoc) => assoc.id_unidade)
+                    .join(", ");
+
+                  return (
+                    <CardGeral
+                      key={visitante.id_visitante || idx}
+                      id={visitante.id_visitante}
+                      campo1={visitante.nome}
+                      campo2={visitante.cpf}
+                      campo3={unidadesDoVisitante}
+                      rota="atualizarVisitanteP"
+                    />
+                  );
+                })
+              ) : (
+                <div style={{ padding: "16px", color: "#888" }}>
+                  Nenhum visitante encontrado.
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

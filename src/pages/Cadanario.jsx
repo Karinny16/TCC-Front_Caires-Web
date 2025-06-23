@@ -3,11 +3,13 @@ import Title from "../components/Title";
 import SelectComponent from '../components/SelectComponent'; 
 import Button from '../components/Button'
 import { IoPersonCircleOutline } from "react-icons/io5";
+import { Controller, useForm } from "react-hook-form";
 
 import DropdownWithRadios from "../components/Dropdown";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import SelectFS from "../components/SelectFS";
+
 function Cadanario() {
   const [funcionario, setFuncionario] = useState({});
   const [dataNascimento, setDataNascimento] = useState(""); // Estado para a data de nascimento
@@ -17,6 +19,7 @@ function Cadanario() {
   const [cnpj, setCnpj] = useState(""); // Estado para o CNPJ
   const [genero, setGenero] = useState(""); // Estado para o gênero
 
+  const { control } = useForm();
   const navigate = useNavigate();
 
   function handlerChangeFunc(event) {
@@ -136,11 +139,6 @@ function Cadanario() {
     });
   };
 
-  const handleGeneroChange = (value) => {
-    setGenero(value);
-    setFuncionario({ ...funcionario, genero: value }); // Atualiza o estado do funcionário
-  };
-
   return (
     <div className="container teste">
       <div className="other-side">
@@ -195,31 +193,18 @@ function Cadanario() {
 
           <div className="input-container">
             <Title>Gênero:</Title>
-            <DropdownWithRadios
-              id="genero"
+            <Controller
               name="genero"
-              onChange={handleGeneroChange} 
-            />
-          </div>
-
-          <div className="input-container">
-            <Title>Telefone:</Title>
-            <input
-              type="text"
-              className="input-fields"
-              placeholder="Digite seu telefone"
-              name="telefone"
-              id="telefone"
-              value={telefone}
-              onChange={handleTelefoneChange}
-              
+              control={control}
+              defaultValue=""
+              render={({ field }) => <DropdownWithRadios {...field} />}
             />
           </div>
 
           <div className="input-container">
             <Title>Senha:</Title>
             <input
-              type="text"
+              type="password"
               className="input-fields"
               placeholder="Digite sua senha"
               name="senha"
@@ -234,15 +219,15 @@ function Cadanario() {
               type="text"
               className="input-fields"
               placeholder="Digite o código do condomínio"
-              name="fk_id_condominio"
-              id="fk_id_condominio"
+              name="id_condominio"
+              id="id_condominio"
               onChange={handlerChangeFunc}
             />
           </div>
           <div>
             <SelectFS
               text="Nível de Acesso:"
-              name="Nivel_acesso"
+              name="nivel_acesso"
               id="nivel_acesso"
               handlerChange={handlerChangeNivel}
               options={nivelAcesso} // <-- já está correto aqui

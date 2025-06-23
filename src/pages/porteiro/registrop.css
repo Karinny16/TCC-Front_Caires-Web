@@ -211,3 +211,23 @@ p {
 .more-icon:active {
   transform: scale(0.9);
 }
+
+/* Botão de logout no canto superior esquerdo */
+.logout-top-left {
+  position: fixed;
+  top: 18px;
+  left: 28px;
+  z-index: 2000;
+  background: none !important;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s;
+}
+
+.logout-top-left:hover {
+  transform: scale(1.08);
+  background: none !important;
+}

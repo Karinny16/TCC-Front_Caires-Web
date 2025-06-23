@@ -5,13 +5,21 @@ import ButtonR from "../../components/ButtonR";
 import ButtonP from "../../components/buttonP";
 import MeuMenu from "../../components/MeuMenu";
 import { IoAddCircleOutline } from "react-icons/io5";
-
+import { IoIosPower } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
 function PedidosRP() {
   const navigate = useNavigate();
 
   return (
+    <>
+       <button
+            className="logout-top-left"
+            onClick={() => navigate("/")}
+            title="Sair"
+          >
+            <IoIosPower size={48} color="white" />
+          </button>
     <div className="container-principal">
       {/* Container dos botões - Não interfere no alinhamento */}
       <div className="container-botoes">
@@ -81,6 +89,7 @@ function PedidosRP() {
         </div>
       </div>
     </div>
+  </>
   );
 }
 

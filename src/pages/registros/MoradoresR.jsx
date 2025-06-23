@@ -6,16 +6,17 @@ import ButtonAz from "../../components/ButtonAz";
 import MeuMenu  from "../../components/MeuMenu";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-
+import CardGeral from "../CardGeral";
 
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import Moradorcard from "../Moracard";
+
 function MoradoresR() {
     const navigate = useNavigate();
 
   const [moradores, setMoradores] = useState([]);
-
+  const [filteredMoradores, setFilteredMoradores] = useState([]); // Estado para moradores filtrados
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para o termo de busca
 
   useEffect(() => {
     fetch('http://localhost:3333/morador', {
@@ -28,12 +29,25 @@ function MoradoresR() {
       .then((morador) => {
         const lista = Array.isArray(morador.message) ? morador.message : [];
         setMoradores(lista);
+        setFilteredMoradores(lista); // Inicializa os moradores filtrados
       })
       .catch((err) => {
         console.error("Erro ao buscar moradores:", err);
         setMoradores([]);
+        setFilteredMoradores([]);
       });
-  }, [])
+  }, []);
+
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    const filtered = moradores.filter((morador) =>
+      morador.nome.toLowerCase().includes(term) ||
+      morador.id_unidade.toString().toLowerCase().includes(term) || // Filtra pela unidade
+      morador.cpf.toLowerCase().includes(term) // Filtra pelo CPF
+    );
+    setFilteredMoradores(filtered);
+  };
 
   return (
 
@@ -71,6 +85,8 @@ function MoradoresR() {
                   type="text"
                   className="input-fiels"
                   placeholder="procurar"
+                  value={searchTerm}
+                  onChange={handleSearch} // Adiciona o evento de busca
                 />
               </div>
             </div>
@@ -80,16 +96,16 @@ function MoradoresR() {
           <div className="label-side">
             <div className="div-label">
               <p>Nome</p>
-              <p>Ramal</p>
-              <p>Telefone</p>
+              <p>Unidade</p>
+              <p>CPF</p>
             </div>
-            {Array.isArray(moradores) && moradores.length > 0 ? (
-              moradores.map((morador, idx) => (
-                <Moradorcard
+            {Array.isArray(filteredMoradores) && filteredMoradores.length > 0 ? (
+              filteredMoradores.map((morador, idx) => (
+                <CardGeral
                   key={morador.id_morador || idx}
-                  nome={morador.nome}
-                  ramal={morador.ramal}
-                  telefone={morador.telefone}
+                  campo1={morador.nome}
+                  campo2={morador.id_unidade}
+                  campo3={morador.cpf}
                   id_morador={morador.id_morador}
                   rota="moradoresa"
                 />

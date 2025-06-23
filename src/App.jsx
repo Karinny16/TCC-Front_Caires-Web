@@ -69,7 +69,7 @@ import VisitantesA from "./pages/registro-atualizar/VisitantesA.jsx";
 import VeiculosA from "./pages/registro-atualizar/VeiculosA.jsx";
 import EventosA from "./pages/registro-atualizar/EventosA.jsx";
 import PedidosA from "./pages/registro-atualizar/PedidosA.jsx";
-
+import AtualizarVisitante from "./pages/porteiro/atualizarVisitante.jsx";
 
 
 import Funcionario from "./pages/Funcionario.jsx";
@@ -136,6 +136,7 @@ function Rotas() {
         <Route path="/veiculosa/:id" element={<VeiculosA />} />
         <Route path="/eventosa/:id" element={<EventosA />} />
         <Route path="/pedidosa/:id" element={<PedidosA />} />
+        <Route path="/atualizarVisitanteP/:id_visitante" element={<AtualizarVisitante />} />
       </Routes>
     </Router>
   );

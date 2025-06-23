@@ -27,8 +27,6 @@ function CadasPSer() {
       genero: "",
       uf: "",
       id_unidade: "",
-
-
     },
   });
 

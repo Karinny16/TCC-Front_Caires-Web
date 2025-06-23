@@ -70,7 +70,7 @@ function MoradoresC() {
       })
       .then((respJSON) => {
         console.log("RESPOSTA:", respJSON);
-        navigate("/");
+        navigate("/moradores");
       })
       .catch((error) => {
         console.log("ERRO:", error.message);
@@ -130,7 +130,7 @@ function MoradoresC() {
           <div className="input-container">
             <Title>Data de Nascimento:</Title>
             <Controller
-              name="dt_nascimento"
+              name="data_nascimento"
               control={control}
               defaultValue=""
               render={({ field }) => (
@@ -151,21 +151,13 @@ function MoradoresC() {
           <div className="input-container">
             <Title>Gênero:</Title>
             <Controller
-              name="genero"
+              name="id_genero"
               control={control}
               defaultValue=""
               render={({ field }) => <DropdownWithRadios {...field} />}
             />
           </div>
-          <div className="input-container">
-            <Title>Telefone:</Title>
-            <input
-              type="text"
-              className="input-fields"
-              placeholder="Digite seu nome"
-              {...register("telefone")}
-            />
-          </div>
+
           <div className="input-container">
             <Title>Email:</Title>
             <input
@@ -175,41 +167,24 @@ function MoradoresC() {
               {...register("email")}
             />
           </div>
-          <div className="input-container">
-            <Title>Apartamento:</Title>
-            <input
-              type="text"
-              className="input-fields"
-              placeholder="Digite seu apartamento"
-              {...register("apartamento")}
-            />
-          </div>
-          <div className="input-container">
-            <Title>Bloco:</Title>
-            <input
-              type="text"
-              className="input-fields"
-              placeholder="Digite seu bloco"
-              {...register("bloco")}
-            />
-          </div>
-          <div className="input-container">
-            <Title>Ramal:</Title>
-            <input
-              type="text"
-              className="input-fields"
-              placeholder="Digite seu ramal"
-              {...register("ramal")}
-            />
-          </div>
 
           <div className="input-container">
             <Title>Senha:</Title>
             <input
-              type="text"
+              type="password"
               className="input-fields"
               placeholder="Digite sua senha"
               {...register("senha")}
+            />
+          </div>
+
+          <div className="input-container">
+            <Title>Código da Unidade:</Title>
+            <input
+              type="text"
+              className="input-fields"
+              placeholder="Digite o código da unidade"
+              {...register("id_unidade")}
             />
           </div>
 
