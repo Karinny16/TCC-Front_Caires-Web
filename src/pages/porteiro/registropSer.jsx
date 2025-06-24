@@ -90,7 +90,7 @@ function ServidoresRP() {
                 <input
                   type="text"
                   className="procurar-campo"
-                  placeholder="procurar visitantes por CPF"
+                  placeholder="Procurar visitantes por CPF"
                   value={cpf}
                   onChange={e => {
                     setCpf(formatarCpf(e.target.value));
@@ -105,7 +105,7 @@ function ServidoresRP() {
             </div>
             <div className="div-but">
               <button className="custom-button-cad13" onClick={buscarPrestador}>
-                ACESSAR
+                CONSULTAR
               </button>
             </div>
           </div>
@@ -131,6 +131,16 @@ function ServidoresRP() {
              <div className={`badge${visitante[0]?.permissao === "negado" ? " negado" : ""}`}>
                 Visitante já cadastrado
               </div>
+              {/* Exibe a imagem do visitante, se houver */}
+              {visitante[0]?.imagem && (
+                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                  <img
+                    src={`http://localhost:3333/uploads/${visitante[0].imagem}`}
+                    alt="Foto do visitante"
+                    className="foto-visitante-redonda"
+                  />
+                </div>
+              )}
               <div className="info-row">
                 <span className="info-label">Nome:</span> {visitante[0].nome}
               </div>
@@ -144,7 +154,7 @@ function ServidoresRP() {
                 <span className="info-label">Nível de acesso:</span> {visitante[0].nivel_acesso}
               </div>
               <div className="info-row">
-                <span className="info-label">Status de permição:</span> {visitante[0].permissao}
+                <span className="info-label">Status de permissão:</span> {visitante[0].permissao}
               </div>
               <div className="info-row">
                 <span className="info-label">Unidade:</span>{" "}
@@ -158,16 +168,12 @@ function ServidoresRP() {
                   <span className="info-label">Motivo:</span> {visitante[0].motivo}
                 </div>
               )}
-              <div className="info-row">
-                <span className="info-label">Data/Hora da consulta:</span> {visitante[0].dataHora}
-              </div>
+            
             </div>
           )}
           <div className="botao"></div>
           <div className="div-button21">
-            <button className="custom-button-cad12" onClick={handleClick}>
-              VOLTAR
-            </button>
+         
           </div>
         </div>
       </div>

@@ -18,6 +18,8 @@ function Cadanario() {
   const [nivelAcesso, setNivelAcesso] = useState([]); // <-- agora é array
   const [cnpj, setCnpj] = useState(""); // Estado para o CNPJ
   const [genero, setGenero] = useState(""); // Estado para o gênero
+  const [idGenero, setIdGenero] = useState("");
+  const [idNivel, setIdNivel] = useState("");
 
   const { control } = useForm();
   const navigate = useNavigate();
@@ -27,7 +29,11 @@ function Cadanario() {
     console.log(funcionario);
   }
 
- 
+  function handleGeneroChange(value) {
+    setIdGenero(value);
+    setFuncionario({ ...funcionario, id_genero: value });
+  }
+
   function formatDate(value) {
     return value
       .replace(/\D/g, "") // Remove tudo que não for dígito
@@ -39,7 +45,7 @@ function Cadanario() {
   function handleDateChange(event) {
     const formattedDate = formatDate(event.target.value);
     setDataNascimento(formattedDate);
-    setFuncionario({ ...funcionario, dt_nascimento: formattedDate }); // Corrigido aqui
+    setFuncionario({ ...funcionario, data_nascimento: formattedDate }); // Corrigido aqui
   }
 
   function formatTelefone(value) {
@@ -71,12 +77,25 @@ function Cadanario() {
     setFuncionario({ ...funcionario, cpf: formattedCpf });
   }
    function handlerChangeNivel(event) {
-        setFuncionario({ ...funcionario, nivel_acesso: event.target.value });
-    }
+    // Busca o id_nivel pelo nome selecionado
+    const selected = nivelAcesso.find((n) => n.descricao === event.target.value);
+    setIdNivel(selected ? selected.id_nivel : "");
+    setFuncionario({ ...funcionario, nivel_acesso: event.target.value, id_nivel: selected ? selected.id_nivel : "" });
+  }
   function submit(event) {
     event.preventDefault();
-    console.log(funcionario);
-    insertFunc(funcionario);
+    // Monta o objeto para o backend
+    const payload = {
+      nome: funcionario.nome,
+      cpf: funcionario.cpf,
+      senha: funcionario.senha,
+      data_nascimento: funcionario.data_nascimento,
+      id_genero: funcionario.id_genero,
+      nivel_acesso: funcionario.nivel_acesso,
+      id_condominio: funcionario.id_condominio,
+      id_nivel: funcionario.id_nivel
+    };
+    insertFunc(payload);
   }
    useEffect(() => {
     fetch('http://localhost:3333/nivelAcesso', {
@@ -193,12 +212,7 @@ function Cadanario() {
 
           <div className="input-container">
             <Title>Gênero:</Title>
-            <Controller
-              name="genero"
-              control={control}
-              defaultValue=""
-              render={({ field }) => <DropdownWithRadios {...field} />}
-            />
+            <DropdownWithRadios value={idGenero} onChange={handleGeneroChange} />
           </div>
 
           <div className="input-container">

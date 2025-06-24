@@ -120,7 +120,7 @@ function PedidosC() {
               </span>
             )}
           </div>
-
+            
           <div className="contente-3"></div>
 
           <div className="contente-2">

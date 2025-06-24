@@ -231,3 +231,35 @@ p {
   transform: scale(1.08);
   background: none !important;
 }
+
+.encomenda-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 18px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+.encomenda-table th, .encomenda-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  max-width: 180px;
+  word-break: break-word;
+}
+
+.encomenda-table th {
+  background: #e0e7ff;
+  font-weight: 600;
+}
+
+.encomenda-table tr:last-child td {
+  border-bottom: none;
+}
+
+.encomenda-table img {
+  display: block;
+  margin: 0 auto;
+}

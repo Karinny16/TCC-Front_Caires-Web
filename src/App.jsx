@@ -38,7 +38,7 @@ import RegistroP from "./pages/porteiro/registropVisi.jsx"
 import ServadoresRP from "./pages/porteiro/registropSer.jsx";
 import PedidosRP from "./pages/porteiro/registropPed.jsx";
 import CadasPvisi from "./pages/porteiro/cadasPVisi.jsx";
-import CadasPSer from "./pages/porteiro/cadasPSer.jsx";
+import CadasEncomenda from "./pages/porteiro/cadasPSer.jsx";
 
 /*botoes ao lado*/
 import Inicio from "./pages/Telainicial.jsx";
@@ -104,7 +104,7 @@ function Rotas() {
         <Route path="/servidorP" element={<ServadoresRP />} />
         <Route path="/pedidosP" element={<PedidosRP />} />
         <Route path="/visitantesCP" element={<CadasPvisi />} />
-        <Route path="/prestadoresCP" element={<CadasPSer />} />
+        <Route path="/encomenda" element={<CadasEncomenda />} />
 
 
 

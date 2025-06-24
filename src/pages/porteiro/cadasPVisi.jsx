@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import MenuPorteiro from "../../components/MenuPorteiro";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { FiImage } from "react-icons/fi";
+import CustomAlert from "../../components/CardAlert.jsx";
 
 // Schema de validação para visitante
 const FormCardSchema = z.object({
@@ -27,6 +29,9 @@ const NIVEL_ACESSO_OPTIONS = [
 
 function CadasPvisi({ imageUrl }) {
   const navigate = useNavigate();
+  const [imagem, setImagem] = React.useState(null);
+  const [previewUrl, setPreviewUrl] = React.useState(null);
+  const [alertMsg, setAlertMsg] = React.useState(""); // <-- ALERTA
   const {
     register,
     handleSubmit,
@@ -51,32 +56,31 @@ function CadasPvisi({ imageUrl }) {
   };
 
   const onSubmit = async (data) => {
-    const visitanteData = {
-      nome: data.nome,
-      cpf: data.cpf,
-      rg: data.rg,
-      nivel_acesso: data.nivel_acesso,
-      id_genero: Number(data.genero),
-    };
-    console.log("Enviando para backend:", visitanteData);
     try {
-      // 1. Cadastra visitante
+      const formData = new FormData();
+      formData.append("nome", data.nome);
+      formData.append("cpf", data.cpf);
+      formData.append("rg", data.rg);
+      formData.append("nivel_acesso", data.nivel_acesso);
+      formData.append("id_genero", data.genero);
+      if (imagem) {
+        formData.append("imagem", imagem);
+      }
+
+      // 1. Cadastra visitante com imagem
       const resp = await fetch("http://localhost:3333/visitantes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(visitanteData),
+        body: formData,
       });
+
       if (resp.ok) {
         const visitanteCriado = await resp.json();
-        console.log("Visitante criado:", visitanteCriado);
-
         const id_visitante = visitanteCriado.id_visitante;
         if (!id_visitante) {
-        alert("Erro: id_visitante não retornado pelo backend.");
-        return;
-      }
+          setAlertMsg("Erro: id_visitante não retornado pelo backend.");
+          return;
+        }
         // 2. Faz associação com unidade
-        console.log("Associação:", { id_visitante, id_unidade: data.id_unidade });
         const assocResp = await fetch("http://localhost:3333/moradorVisitanteAssociacao", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -87,37 +91,72 @@ function CadasPvisi({ imageUrl }) {
         });
 
         if (assocResp.ok) {
-          alert("Visitante cadastrado e associado à unidade com sucesso!");
-          navigate("/visitantesP");
+          setAlertMsg("Visitante cadastrado e associado à unidade com sucesso!");
+          setTimeout(() => navigate("/visitantesP"), 1500);
         } else {
-          alert("Visitante cadastrado, mas erro ao associar à unidade.");
+          setAlertMsg("Visitante cadastrado, mas erro ao associar à unidade.");
         }
       } else {
-        alert("Erro ao cadastrar visitante.");
+        // Tenta pegar mensagem do backend para CPF/RG duplicado
+        let msg = "Erro ao cadastrar visitante.";
+        try {
+          const errorData = await resp.json();
+          if (errorData && errorData.message) {
+            msg = errorData.message; // <-- Mostra a mensagem do backend
+          }
+        } catch {}
+        setAlertMsg(msg);
       }
     } catch (e) {
-      alert("Erro de conexão.");
+      setAlertMsg("Erro de conexão.");
+    }
+  };
+
+  // Atualiza preview ao selecionar imagem
+  const handleImagemChange = (e) => {
+    const file = e.target.files[0];
+    setImagem(file);
+    if (file) {
+      setPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setPreviewUrl(null);
     }
   };
 
   return (
     <div className="container teste">
+      <CustomAlert message={alertMsg} onClose={() => setAlertMsg("")} />
       <div className="other-side">
         <div className="contente-1">
           <MenuPorteiro />
           <Title>Adicionar um novo Visitante:</Title>
           <div className="photo-circle">
-            {imageUrl ? (
+            {previewUrl ? (
+              <img src={previewUrl} alt="Preview" />
+            ) : imageUrl ? (
               <img src={imageUrl} alt="User" />
             ) : (
               <IoPersonCircleOutline size={550} color="#555" />
             )}
           </div>
+          {/* Input de foto abaixo do círculo */}
+          <div className="input-container" style={{ marginTop: 16, position: "relative" }}>
+            <label className="custom-file-label">
+              <FiImage className="icon-image-upload" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImagemChange}
+                style={{ display: "none" }}
+              />
+              <span className="custom-file-text">Selecionar imagem</span>
+            </label>
+          </div>
         </div>
       </div>
 
       <div className="direita-side">
-        <form className="putbu" onSubmit={handleSubmit(onSubmit)}>
+        <form className="putbu" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
           <div className="input-container">
             <Title>Nome:</Title>
             <input
@@ -125,7 +164,7 @@ function CadasPvisi({ imageUrl }) {
               className="input-fields"
               {...register("nome")}
               placeholder="Digite o seu nome"
-            />
+            />  
             {errors.nome && (
               <span style={{ color: "red" }}>{errors.nome.message}</span>
             )}

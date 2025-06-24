@@ -1,41 +1,69 @@
+import React from "react";
 import Title from "../../components/Title";
 import Button from "../../components/Button";
-import DropdownWithRadios from "../../components/Dropdown";
+import { FiImage, FiPackage } from "react-icons/fi";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import MenuPorteiro from "../../components/MenuPorteiro";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormCardSchema, formatDate, formatCPF } from "../../components/FormCad";
 
-function CadasPSer() {
+function CadasEncomenda() {
   const navigate = useNavigate();
+  const [imagem, setImagem] = React.useState(null);
+  const [previewUrl, setPreviewUrl] = React.useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-    watch,
     reset,
   } = useForm({
     mode: "all",
-    resolver: zodResolver(FormCardSchema),
     defaultValues: {
-      nome: "",
-      cpf: "",
-      genero: "",
-      uf: "",
+      empresa: "",
       id_unidade: "",
+      status_entrega: "",
+      data_entrega: "",
     },
   });
 
   const handleClick = () => {
-    navigate("/servidorP");
+    navigate("/pedidosP");
   };
 
-  const onSubmit = (data) => {
-    console.log("Dados enviados:", data);
+  const handleImagemChange = (e) => {
+    const file = e.target.files[0];
+    setImagem(file);
+    if (file) setPreviewUrl(URL.createObjectURL(file));
+    else setPreviewUrl(null);
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData();
+      formData.append("empresa", data.empresa);
+      formData.append("id_unidade", data.id_unidade);
+      formData.append("status_entrega", data.status_entrega);
+      formData.append("data_entrega", data.data_entrega);
+      if (imagem) formData.append("imagem", imagem);
+
+      const resp = await fetch("http://localhost:3333/encomendas", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (resp.ok) {
+        alert("Encomenda cadastrada com sucesso!");
+        reset();
+        setPreviewUrl(null);
+        setImagem(null);
+        navigate("/pedidosP");
+      } else {
+        alert("Erro ao cadastrar encomenda.");
+      }
+    } catch (e) {
+      alert("Erro de conexão.");
+    }
   };
 
   return (
@@ -43,87 +71,69 @@ function CadasPSer() {
       <div className="other-side">
         <div className="contente-1">
           <MenuPorteiro />
-
-          <Title>Adicionar um novo Prestador de serviço:</Title>
+          <Title>Adicionar uma nova Encomenda:</Title>
           <div className="photo-circle">
-            <IoPersonCircleOutline size={550} color="#555" />
+            {previewUrl ? (
+              <img src={previewUrl} alt="Preview" />
+            ) : (
+              <FiPackage size={180} color="#809ad1" />
+            )}
+          </div>
+          {/* Input de foto abaixo do círculo */}
+          <div
+            className="input-container"
+            style={{ marginTop: 16, position: "relative" }}
+          >
+            <label className="custom-file-label">
+              <FiImage className="icon-image-upload" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImagemChange}
+                style={{ display: "none" }}
+              />
+              <span className="custom-file-text">Selecionar imagem</span>
+            </label>
           </div>
         </div>
       </div>
 
       <div className="direita-side">
-        <form className="putbu" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="putbu"
+          onSubmit={handleSubmit(onSubmit)}
+          encType="multipart/form-data"
+        >
           <div className="input-container">
-            <Title>Nome:</Title>
+            <Title>Empresa:</Title>
             <input
               type="text"
               className="input-fields"
-              {...register("nome")}
-              placeholder="Digite o seu nome"
+              {...register("empresa", { required: true })}
+              placeholder="Digite o nome da empresa"
             />
-            {errors.nome && (
-              <span style={{ color: "red" }}>{errors.nome.message}</span>
+            {errors.empresa && (
+              <span style={{ color: "red" }}>Campo obrigatório</span>
             )}
           </div>
 
           <div className="input-container">
-            <Title>CPF:</Title>
+            <Title>Vínculo de Unidade:</Title>
             <input
               type="text"
               className="input-fields"
-              value={watch("cpf")}
-              placeholder="Digite seu CPF"
-              onChange={(e) => {
-                const formatted = formatCPF(e.target.value);
-                setValue("cpf", formatted, { shouldValidate: true });
-              }}
-            />
-            {errors.cpf && (
-              <span style={{ color: "red" }}>{errors.cpf.message}</span>
-            )}
-          </div>
-
-          <div className="input-container">
-            <Title>Gênero:</Title>
-            <DropdownWithRadios
-              value={watch("genero")}
-              onChange={(val) => setValue("genero", val)}
-            />
-            {errors.genero && (
-              <span style={{ color: "red" }}>{errors.genero.message}</span>
-            )}
-          </div>
-
-          <div className="input-container">
-            <Title>UF:</Title>
-            <input
-              type="text"
-              className="input-fields"
-              {...register("uf")}
-              placeholder="Digite seu UF"
-            />
-            {errors.uf && (
-              <span style={{ color: "red" }}>{errors.uf.message}</span>
-            )}
-          </div>
-
-          <div className="input-container">
-            <Title>Id_Unidade:</Title>
-            <input
-              type="text"
-              className="input-fields"
-              {...register("id_unidade")}
-              placeholder="Digite o id da unidade"
+              {...register("id_unidade", { required: true })}
+              placeholder="Digite o vínculo da unidade"
             />
             {errors.id_unidade && (
-              <span style={{ color: "red" }}>{errors.id_unidade.message}</span>
+              <span style={{ color: "red" }}>Campo obrigatório</span>
             )}
           </div>
 
           <div className="contente-3"></div>
           <div className="contente-2">
             <div className="button-div">
-              <Button text="VOLTA" onClick={handleClick} />
+              <Button text="VOLTAR" onClick={handleClick} />
               <Button type="submit" text="ENVIAR" />
             </div>
           </div>
@@ -133,4 +143,4 @@ function CadasPSer() {
   );
 }
 
-export default CadasPSer;
+export default CadasEncomenda;

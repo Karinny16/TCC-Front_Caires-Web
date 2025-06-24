@@ -3,16 +3,17 @@ import cairesa from "../../assets/cairesazul.png";
 import { IoIosSearch } from "react-icons/io";
 import ButtonR from "../../components/ButtonR";
 import ButtonP from "../../components/buttonP";
-import MeuMenu from "../../components/MeuMenu";
+import MenuPorteiro from "../../components/MenuPorteiro";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { IoIosPower } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import CardGeral from "../CardGeral";
 function RegistroP() {
   const navigate = useNavigate();
   const [visitantes, setVisitantes] = useState([]);
-  const [associacoes, setAssociacoes] = useState([]); // renomeie para ficar claro
+  const [associacoes, setAssociacoes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // NOVO
 
   useEffect(() => {
     fetch("http://localhost:3333/visitantes", {
@@ -50,6 +51,21 @@ function RegistroP() {
       });
   }, []);
 
+  // Função para filtrar visitantes
+  const visitantesFiltrados = visitantes.filter((visitante) => {
+    const unidadesDoVisitante = associacoes
+      .filter((assoc) => assoc.id_visitante === visitante.id_visitante)
+      .map((assoc) => assoc.id_unidade)
+      .join(", ");
+
+    const termo = searchTerm.toLowerCase();
+    return (
+      visitante.nome.toLowerCase().includes(termo) ||
+      visitante.cpf.toLowerCase().includes(termo) ||
+      unidadesDoVisitante.toLowerCase().includes(termo)
+    );
+  });
+
   return (
     <>
       <button
@@ -71,7 +87,7 @@ function RegistroP() {
             {/* Barra de pesquisa */}
             <div className="pesquisa-side">
               <div className="continente-1">
-                <MeuMenu />
+                <MenuPorteiro />
                 <img src={cairesa} alt="Logo" className="img-cadA" />
                 <div className="icon-contain">
                   <IoAddCircleOutline
@@ -90,6 +106,8 @@ function RegistroP() {
                     type="text"
                     className="input-fiels"
                     placeholder="procurar"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
               </div>
@@ -102,9 +120,8 @@ function RegistroP() {
                 <p>CPF</p>
                 <p>Vinculo</p>
               </div>
-              {visitantes.length > 0 ? (
-                visitantes.map((visitante, idx) => {
-                  // Pegue todas as unidades associadas a esse visitante
+              {visitantesFiltrados.length > 0 ? (
+                visitantesFiltrados.map((visitante, idx) => {
                   const unidadesDoVisitante = associacoes
                     .filter((assoc) => assoc.id_visitante === visitante.id_visitante)
                     .map((assoc) => assoc.id_unidade)
